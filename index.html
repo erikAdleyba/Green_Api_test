@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GREEN-API Integration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            background: white;
+            width: 800px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .left-section, .right-section {
+            flex: 1;
+            padding: 20px;
+        }
+        .left-section {
+            border-right: 1px solid #ccc;
+            margin-right: 20px; /* Отступ справа */
+        }
+        h1 {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .field {
+            margin-bottom: 20px; /* Увеличен отступ между полями */
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        textarea {
+            resize: none;
+            height: 100px;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Увеличен отступ между кнопками */
+        }
+        .response {
+            height: calc(100vh - 200px);
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <h1>GREEN-API Methods</h1>
+
+            <div class="field">
+                <label for="idInstance">idInstance:</label>
+                <input type="text" id="idInstance" placeholder="Enter idInstance">
+            </div>
+
+            <div class="field">
+                <label for="apiTokenInstance">apiTokenInstance:</label>
+                <input type="text" id="apiTokenInstance" placeholder="Enter apiTokenInstance">
+            </div>
+
+            <div class="buttons">
+                <button onclick="getSettings()">Get Settings</button>
+                <button onclick="getStateInstance()">Get State Instance</button>
+            </div>
+
+            <div class="field">
+                <label for="chatIdMessage">chatId:</label>
+                <input type="text" id="chatIdMessage" placeholder="Enter chatId (e.g., 1234567890@c.us)">
+            </div>
+
+            <div class="field">
+                <label for="message">Message:</label>
+                <input type="text" id="message" placeholder="Enter your message">
+            </div>
+
+            <button onclick="sendMessage()">Send Message</button>
+
+            <div class="field">
+                <label for="chatIdFile">chatId:</label>
+                <input type="text" id="chatIdFile" placeholder="Enter chatId (e.g., 1234567890@c.us)">
+            </div>
+
+            <div class="field">
+                <label for="urlFile">File URL:</label>
+                <input type="text" id="urlFile" placeholder="Enter file URL">
+            </div>
+
+            <div class="field">
+                <label for="fileName">File Name (optional):</label>
+                <input type="text" id="fileName" placeholder="Enter file name">
+            </div>
+
+            <button onclick="sendFileByUrl()">Send File By URL</button>
+        </div>
+        <div class="right-section">
+            <label for="response">Response:</label>
+            <textarea id="response" class="response" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = "https://api.green-api.com/waInstance";
+
+        async function callAPI(endpoint, method = 'GET', body = null) {
+            const idInstance = document.getElementById('idInstance').value;
+            const apiTokenInstance = document.getElementById('apiTokenInstance').value;
+
+            if (!idInstance || !apiTokenInstance) {
+                alert('Please enter idInstance and apiTokenInstance.');
+                return;
+            }
+
+            const url = `${API_BASE_URL}${idInstance}/${endpoint}/${apiTokenInstance}`;
+
+            try {
+                const options = { method };
+                if (body) {
+                    options.headers = { 'Content-Type': 'application/json' };
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(url, options);
+                const result = await response.json();
+                document.getElementById('response').value = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('response').value = `Error: ${error.message}`;
+            }
+        }
+
+        function getSettings() {
+            callAPI('getSettings');
+        }
+
+        function getStateInstance() {
+            callAPI('getStateInstance');
+        }
+
+        function sendMessage() {
+            const chatId = document.getElementById('chatIdMessage').value;
+            const message = document.getElementById('message').value;
+            if (chatId && message) {
+                callAPI('sendMessage', 'POST', { chatId, message });
+            } else {
+                alert('chatId and message are required.');
+            }
+        }
+
+        function sendFileByUrl() {
+            const chatId = document.getElementById('chatIdFile').value;
+            const urlFile = document.getElementById('urlFile').value;
+            const fileName = document.getElementById('fileName').value || null;
+            if (chatId && urlFile) {
+                callAPI('sendFileByUrl', 'POST', { chatId, urlFile, fileName });
+            } else {
+                alert('chatId and urlFile are required.');
+            }
+        }
+    </script>
+</body>
+</html>
