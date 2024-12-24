@@ -58,6 +58,7 @@
             cursor: pointer;
             border: none;
             font-size: 16px;
+            margin-top: 15px; /* Увеличен отступ сверху для кнопок */
         }
         button:hover {
             background-color: #218838;
@@ -79,59 +80,73 @@
             border-radius: 4px;
             background-color: #f9f9f9;
         }
+        .language-button {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .language-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="left-section">
-            <h1>GREEN-API Methods</h1>
+            <h1 id="title">GREEN-API Methods</h1>
+
+            <button class="language-button" onclick="toggleLanguage()">Switch to Russian</button>
 
             <div class="field">
-                <label for="idInstance">idInstance:</label>
+                <label for="idInstance" id="label-idInstance">idInstance:</label>
                 <input type="text" id="idInstance" placeholder="Enter idInstance">
             </div>
 
             <div class="field">
-                <label for="apiTokenInstance">apiTokenInstance:</label>
+                <label for="apiTokenInstance" id="label-apiTokenInstance">apiTokenInstance:</label>
                 <input type="text" id="apiTokenInstance" placeholder="Enter apiTokenInstance">
             </div>
 
             <div class="buttons">
-                <button onclick="getSettings()">Get Settings</button>
-                <button onclick="getStateInstance()">Get State Instance</button>
+                <button onclick="getSettings()" id="button-getSettings">getSettings</button>
+                <button onclick="getStateInstance()" id="button-getStateInstance">getStateInstance</button>
             </div>
 
             <div class="field">
-                <label for="chatIdMessage">chatId:</label>
+                <label for="chatIdMessage" id="label-chatIdMessage">chatId:</label>
                 <input type="text" id="chatIdMessage" placeholder="Enter chatId (e.g., 1234567890@c.us)">
             </div>
 
             <div class="field">
-                <label for="message">Message:</label>
+                <label for="message" id="label-message">Message:</label>
                 <input type="text" id="message" placeholder="Enter your message">
             </div>
 
-            <button onclick="sendMessage()">Send Message</button>
+            <button onclick="sendMessage()" id="button-sendMessage">sendMessage</button>
 
             <div class="field">
-                <label for="chatIdFile">chatId:</label>
+                <label for="chatIdFile" id="label-chatIdFile">chatId:</label>
                 <input type="text" id="chatIdFile" placeholder="Enter chatId (e.g., 1234567890@c.us)">
             </div>
 
             <div class="field">
-                <label for="urlFile">File URL:</label>
+                <label for="urlFile" id="label-urlFile">fileURL:</label>
                 <input type="text" id="urlFile" placeholder="Enter file URL">
             </div>
 
             <div class="field">
-                <label for="fileName">File Name (optional):</label>
+                <label for="fileName" id="label-fileName">fileName (optional):</label>
                 <input type="text" id="fileName" placeholder="Enter file name">
             </div>
 
-            <button onclick="sendFileByUrl()">Send File By URL</button>
+            <button onclick="sendFileByUrl()" id="button-sendFileByUrl">sendFileByURL</button>
         </div>
         <div class="right-section">
-            <label for="response">Response:</label>
+            <label for="response" id="label-response">Response:</label>
             <textarea id="response" class="response" readonly></textarea>
         </div>
     </div>
@@ -192,6 +207,24 @@
             } else {
                 alert('chatId and urlFile are required.');
             }
+        }
+
+        function toggleLanguage() {
+            const isEnglish = document.getElementById('title').textContent === 'GREEN-API Methods';
+            document.getElementById('title').textContent = isEnglish ? 'Методы GREEN-API' : 'GREEN-API Methods';
+            document.getElementById('label-idInstance').textContent = isEnglish ? 'idInstance:' : 'idInstance:';
+            document.getElementById('label-apiTokenInstance').textContent = isEnglish ? 'apiTokenInstance:' : 'apiTokenInstance:';
+            document.getElementById('button-getSettings').textContent = isEnglish ? 'Получить Настройки' : 'Get Settings';
+            document.getElementById('button-getStateInstance').textContent = isEnglish ? 'Получить Состояние' : 'Get State Instance';
+            document.getElementById('label-chatIdMessage').textContent = isEnglish ? 'chatId:' : 'chatId:';
+            document.getElementById('label-message').textContent = isEnglish ? 'Сообщение:' : 'Message:';
+            document.getElementById('button-sendMessage').textContent = isEnglish ? 'Отправить Сообщение' : 'Send Message';
+            document.getElementById('label-chatIdFile').textContent = isEnglish ? 'chatId:' : 'chatId:';
+            document.getElementById('label-urlFile').textContent = isEnglish ? 'URL Файла:' : 'File URL:';
+            document.getElementById('label-fileName').textContent = isEnglish ? 'Имя Файла (опционально):' : 'File Name (optional):';
+            document.getElementById('button-sendFileByUrl').textContent = isEnglish ? 'Отправить Файл по URL' : 'Send File By URL';
+            document.getElementById('label-response').textContent = isEnglish ? 'ОТВЕТ:' : 'Response:';
+            document.querySelector('.language-button').textContent = isEnglish ? 'Switch to English' : 'Switch to Russian';
         }
     </script>
 </body>
